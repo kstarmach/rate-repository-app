@@ -1,4 +1,5 @@
 import Constants from 'expo-constants'
+import { Platform } from 'react-native'
 
 const theme = {
   colors: {
@@ -10,9 +11,11 @@ const theme = {
     body: 14,
     subheading: 16,
   },
-  fonts: {
-    main: 'System',
-  },
+  fonts: Platform.select({
+    android: 'Roboto',
+    ios: 'Arial',
+    default: 'Sans-serif',
+  }),
   fontWeights: {
     normal: '400',
     bold: '700',
@@ -29,6 +32,7 @@ const theme = {
       paddingTop: Constants.statusBarHeight,
       backgroundColor: '#24292e',
       display: 'flex',
+      flexDirection: 'row',
     },
   },
   repository: {
