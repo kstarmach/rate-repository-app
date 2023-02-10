@@ -1,8 +1,10 @@
-import { View, Pressable, Button, StyleSheet } from 'react-native'
+import { View, Button, StyleSheet } from 'react-native'
 import FormikTextInput from './FormikTextInput';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import useSignIn from '../hooks/useSignIn';
 
+import { useNavigate } from 'react-router-native';
 
 const initialValues = {
     username: '',
@@ -15,7 +17,7 @@ const validationSchema = yup
         username: yup
             .string()
             .required('Username is required'),
-        height: yup
+        password: yup
             .string()
             .required('Password is required'),
     });
@@ -45,16 +47,27 @@ const SignInForm = ({ onSubmit }) => {
                 name="password"
                 secureTextEntry
             />
-            <Pressable onPress={onSubmit} style={{ margin: 5, padding: 5 }}>
-                <Button title="Sign-in" style={styles.button} />
-            </Pressable>
+            <Button onPress={onSubmit} title="Sign-in" style={styles.button} />
+            {/* <Pressable onPress={onSubmit} style={{ margin: 5, padding: 5 }}>
+            </Pressable> */}
         </View>
     );
 };
 
 const SignIn = () => {
-    const onSubmit = (values) => {
-        console.log(values);
+    const [signIn] = useSignIn();
+    const navigate = useNavigate();
+
+    const onSubmit = async (values) => {
+        const { username, password } = values;
+
+        try {
+            const { data } = await signIn({ username, password });
+            console.log(data);
+        } catch (e) {
+            console.log(e);
+        }
+        navigate('/')
     };
     return (
         <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
