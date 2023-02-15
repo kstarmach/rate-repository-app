@@ -29,6 +29,7 @@ const AppBar = () => {
             {currentUser
                 ? <>
                     <AppBarTab label={"Repositories"} link='/' />
+                    <AppBarTab label={"Create a review"} link='/create-review' />
                     {/* <Button title='Log out' onPress={logout} /> */}
                     <Pressable onPress={logout}>
                         <Text style={theme.appBar.tab}>Log out</Text>
@@ -36,7 +37,10 @@ const AppBar = () => {
 
                     {/* <AppBarTab label={"Log out"} link='/sign-in' onPress={logout} /> */}
                 </>
-                : <AppBarTab label={"Sign in"} link='/sign-in' />}
+                : <>
+                    <AppBarTab label={"Sign in"} link='/sign-in' />
+                    <AppBarTab label={"Sign up"} link='/sign-up' />
+                </>}
         </ScrollView>
     </View>;
 };
