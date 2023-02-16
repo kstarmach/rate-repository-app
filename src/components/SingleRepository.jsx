@@ -29,7 +29,7 @@ const RepositoryDescription = ({ description }) => {
     )
 }
 
-const ReviewItem = ({ review }) => {
+export const ReviewItem = ({ review }) => {
     return (
         <View testID="repositoryItem" style={theme.repository.itemContainer}  >
             <View style={theme.repository.row}>
@@ -58,11 +58,18 @@ const RepositoryInfo = ({ repository }) => {
 
 const SingleRepository = () => {
     let { id } = useParams()
-    const { repository } = useRepositoryDetails({ repositoryId: id });
+    const variables = { repositoryId: id }
+    const { repository, fetchMore } = useRepositoryDetails({ first: 3, ...variables });
 
     const reviews = repository
         ? repository.reviews.edges.map((edge) => edge.node)
         : [];
+
+
+    const onEndReach = () => {
+        fetchMore();
+    };
+
 
     return (
         <FlatList
@@ -70,6 +77,8 @@ const SingleRepository = () => {
             renderItem={({ item }) => <ReviewItem review={item} />}
             keyExtractor={({ id }) => id}
             ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
+            onEndReached={onEndReach}
+        // onEndReachedThreshold={0.5}
         // ...
         />
     );

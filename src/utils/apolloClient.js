@@ -1,31 +1,27 @@
-// import { ApolloClient, InMemoryCache } from '@apollo/client'
-// import Constants from 'expo-constants'
-// import { setContext } from '@apollo/client/link/context';
-
-// // const httpLink = createHttpLink({
-// //   // Replace the IP address part with your own IP address!
-// //   uri: 'http://192.168.1.27:4000/graphql',
-// // })
-
-// const createApolloClient = () => {
-//   const uri = Constants.manifest.extra.uri
-//   return new ApolloClient({
-//     //link: httpLink,
-//     uri,
-//     cache: new InMemoryCache(),
-//   })
-// }
-
-// export default createApolloClient
-
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import Constants from 'expo-constants'
 import { setContext } from '@apollo/client/link/context'
-// You might need to change this depending on how you have configured the Apollo Server's URI
+import { relayStylePagination } from '@apollo/client/utilities'
+
 const { uri } = Constants.manifest.extra
 
 const httpLink = createHttpLink({
   uri: uri,
+})
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        repositories: relayStylePagination(),
+      },
+    },
+    Repository: {
+      fields: {
+        reviews: relayStylePagination(),
+      },
+    },
+  },
 })
 
 const createApolloClient = (authStorage) => {
@@ -45,7 +41,7 @@ const createApolloClient = (authStorage) => {
   })
   return new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
+    cache,
   })
 }
 export default createApolloClient

@@ -23,3 +23,9 @@ export const CREATE_USER = gql`
     }
   }
 `
+
+export const DELETE_REPOSITORY = gql`
+mutation Mutation($deleteReviewId: ID!) {
+  deleteReview(id: $deleteReviewId)
+}
+`
